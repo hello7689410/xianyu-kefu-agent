@@ -1,0 +1,18 @@
+services:
+  xianyu-bot:
+    build: .
+    container_name: xianyu-bot
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      # .env：提供 MODEL_NAME / MODEL_API_KEY / MODEL_BASE_URL / XIANYU_COOKIE
+      - ./.env:/app/.env:ro
+      # context.db：持久化聊天/商品上下文，避免重启丢历史
+      - ./context.db:/app/context.db
+    # 可选：如果你想用环境变量覆盖也可以（但 cookie 读取依赖 .env 文件）
+    environment:
+      - HEARTBEAT_INTERVAL=15
+      - HEARTBEAT_TIMEOUT=5
+      - TOKEN_REFRESH_INTERVAL=3600
+      - TOKEN_RETRY_INTERVAL=300
+
